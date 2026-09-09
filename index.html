@@ -1,226 +1,50 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Resume</title>
-    <style>
-        /* --- RESET & LAYOUT --- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>Md Yusuf — Full-Stack Software Engineer & Developer</title>
+    <meta name="description" content="Portfolio of Md Yusuf, a Full-Stack Software Engineer specializing in Java, Spring Boot, React.js, MERN stack, and scalable web solutions." />
+    <meta name="keywords" content="Md Yusuf, Full-Stack Engineer, Software Engineer, Java, Spring Boot, React, MERN stack, Developer Bhopal" />
+    <meta name="author" content="Md Yusuf" />
+    <meta name="robots" content="index, follow" />
 
-        body {
-            background: #0f172a;
-            color: #f8fafc;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            perspective: 1500px; /* Crucial for 3D depth perception */
-        }
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Md Yusuf — Full-Stack Software Engineer" />
+    <meta property="og:description" content="Portfolio of Md Yusuf, a Full-Stack Software Engineer specializing in Java, Spring Boot, React.js, MERN stack, and scalable web solutions." />
+    <meta property="og:site_name" content="Md Yusuf Portfolio" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80" />
 
-        /* --- 3D INTERACTIVE MENU --- */
-        nav {
-            margin-bottom: 40px;
-            z-index: 10;
-        }
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Md Yusuf — Full-Stack Software Engineer" />
+    <meta name="twitter:description" content="Portfolio of Md Yusuf, a Full-Stack Software Engineer specializing in Java, Spring Boot, React.js, MERN stack, and scalable web solutions." />
 
-        .menu {
-            display: flex;
-            gap: 15px;
-            list-style: none;
-        }
+    <!-- Preconnect for Google Fonts performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-        .menu-btn {
-            background: #1e293b;
-            color: #38bdf8;
-            border: 2px solid #38bdf8;
-            padding: 10px 20px;
-            cursor: pointer;
-            font-weight: bold;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-
-        .menu-btn.active, .menu-btn:hover {
-            background: #38bdf8;
-            color: #0f172a;
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
-        }
-
-        /* --- 3D SCENE CONTROLLER --- */
-        .scene {
-            width: 400px;
-            height: 400px;
-            perspective: 1500px;
-        }
-
-        .cube {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d; /* Forces child elements into 3D space */
-            transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
-        }
-
-        /* --- CUBE FACES DEFINITION --- */
-        .face {
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: rgba(30, 41, 59, 0.95);
-            border: 3px solid #38bdf8;
-            border-radius: 12px;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            backface-visibility: hidden; /* Hides reverse side when flipped */
-            box-shadow: inset 0 0 30px rgba(56, 189, 248, 0.2), 0 10px 25px rgba(0,0,0,0.5);
-        }
-
-        /* 3D Transform Coordinates (Pushes panels outwards into a cube shape) */
-        .face.front  { transform: rotateY(0deg) translateZ(200px); }
-        .face.right  { transform: rotateY(90deg) translateZ(200px); }
-        .face.back   { transform: rotateY(180deg) translateZ(200px); }
-        .face.left   { transform: rotateY(-90deg) translateZ(200px); }
-
-        /* --- CONTENT STYLING --- */
-        h1 {
-            color: #38bdf8;
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-        }
-
-        h2 {
-            color: #f1f5f9;
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #334155;
-            padding-bottom: 5px;
-        }
-
-        p {
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #cbd5e1;
-            margin-bottom: 15px;
-        }
-
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .skill-tag {
-            background: #334155;
-            padding: 8px;
-            border-radius: 4px;
-            text-align: center;
-            font-size: 0.9rem;
-            border-left: 3px solid #38bdf8;
-        }
-
-        .project-item {
-            margin-bottom: 15px;
-        }
-
-        .project-item strong {
-            color: #38bdf8;
-        }
-
-        /* --- JAVASCRIPT STATE ROTATIONS --- */
-        .cube.show-front  { transform: rotateY(0deg); }
-        .cube.show-right  { transform: rotateY(-90deg); }
-        .cube.show-back   { transform: rotateY(-180deg); }
-        .cube.show-left   { transform: rotateY(90deg); }
-    </style>
-</head>
-<body>
-
-    <!-- Dynamic Portfolio Navigation Menu -->
-    <nav>
-        <ul class="menu">
-            <li><button class="menu-btn active" onclick="rotateCube('front', this)">Home</button></li>
-            <li><button class="menu-btn" onclick="rotateCube('right', this)">Skills</button></li>
-            <li><button class="menu-btn" onclick="rotateCube('back', this)">Projects</button></li>
-            <li><button class="menu-btn" onclick="rotateCube('left', this)">Contact</button></li>
-        </ul>
-    </nav>
-
-    <!-- 3D Viewport View Wrapper -->
-    <div class="scene">
-        <div class="cube show-front" id="portfolioCube">
-            
-            <!-- Face 1: Home/About -->
-            <div class="face front">
-                <h1>Believer-260</h1>
-                <p style="color: #38bdf8; font-weight: 600;">Creative Full-Stack Developer</p>
-                <p>Building high-performance interactive web experiences using advanced spatial UI and modern layout architectures.</p>
-                <p>Welcome to my 3D digital resume environment.</p>
-            </div>
-
-            <!-- Face 2: Core Engineering Skills -->
-            <div class="face right">
-                <h2>Technical Toolkit</h2>
-                <div class="skills-grid">
-                    <div class="skill-tag">HTML5 / CSS3</div>
-                    <div class="skill-tag">JavaScript ES6</div>
-                    <div class="skill-tag">WebGL / Three.js</div>
-                    <div class="skill-tag">React Engine</div>
-                    <div class="skill-tag">Node.js Ecosystem</div>
-                    <div class="skill-tag">Git Versioning</div>
-                </div>
-            </div>
-
-            <!-- Face 3: Project Showcases -->
-            <div class="face back">
-                <h2>Featured Apps</h2>
-                <div class="project-item">
-                    <strong>🌐 Spatial Web App</strong>
-                    <p>Engineered an immersive e-commerce store mapping spatial 3D interactive product displays.</p>
-                </div>
-                <div class="project-item">
-                    <strong>📊 Data Engine Pipeline</strong>
-                    <p>Designed a fast web metrics tracker delivering real-time telemetry processing pipelines.</p>
-                </div>
-            </div>
-
-            <!-- Face 4: Contact & Channels -->
-            <div class="face left">
-                <h2>Initiate Contact</h2>
-                <p>Let's collaborate on production-ready digital architectures.</p>
-                <p>📧 <strong>Email:</strong> hello@alexmercer.dev</p>
-                <p>💻 <strong>GitHub:</strong> ://github.com</p>
-                <p>🔗 <strong>LinkedIn:</strong> ://linkedin.com</p>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- Cube Interaction Engine -->
-    <script>
-        function rotateCube(faceName, button) {
-            const cube = document.getElementById('portfolioCube');
-            
-            // Wipe existing viewing direction class
-            cube.className = 'cube'; 
-            
-            // Inject targeted CSS state transform rule
-            cube.classList.add('show-' + faceName);
-
-            // Update interactive menu highlighting state
-            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-        }
+    <!-- JSON-LD Structured Data Schema (SEO) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "name": "Md Yusuf",
+            "jobTitle": "Full-Stack Software Engineer",
+            "description": "Software Engineer specializing in Java, Spring Boot, React.js, and MERN stack applications."
+          }
+        ]
+      }
     </script>
-
-</body>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>
