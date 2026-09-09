@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SK HASAN - 3D Resume Portfolio</title>
+    <style>
+        /* --- RESET & LAYOUT --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0f172a;
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            perspective: 2000px; /* Enhanced depth for 3D layout */
+            padding: 20px;
+        }
+
+        /* --- 3D INTERACTIVE MENU --- */
+        nav {
+            margin-bottom: 40px;
+            z-index: 10;
+        }
+
+        .menu {
+            display: flex;
+            gap: 12px;
+            list-style: none;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .menu-btn {
+            background: #1e293b;
+            color: #38bdf8;
+            border: 2px solid #38bdf8;
+            padding: 10px 22px;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 6px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .menu-btn.active, .menu-btn:hover {
+            background: #38bdf8;
+            color: #0f172a;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
+        }
+
+        /* --- 3D SCENE CONTROLLER --- */
+        .scene {
+            width: 500px;
+            height: 520px;
+            perspective: 2000px;
+        }
+
+        .cube {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+
+        /* --- CUBE FACES DEFINITION --- */
+        .face {
+            position: absolute;
+            width: 500px;
+            height: 520px;
+            background: rgba(30, 41, 59, 0.98);
+            border: 3px solid #38bdf8;
+            border-radius: 14px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            backface-visibility: hidden;
+            box-shadow: inset 0 0 30px rgba(56, 189, 248, 0.15), 0 15px 35px rgba(0, 0, 0, 0.6);
+            overflow-y: auto; /* Internal scrolling capability if content overflows */
+        }
+
+        /* Custom Modern Scrollbars */
+        .face::-webkit-scrollbar {
+            width: 6px;
+        }
+        .face::-webkit-scrollbar-track {
+            background: rgba(30, 41, 59, 0.5);
+        }
+        .face::-webkit-scrollbar-thumb {
+            background: #38bdf8;
+            border-radius: 3px;
+        }
+
+        /* 3D Transform Translation Vectors (Z-depth adjusted to match width/2) */
+        .face.front  { transform: rotateY(0deg) translateZ(250px); }
+        .face.right  { transform: rotateY(90deg) translateZ(250px); }
+        .face.back   { transform: rotateY(180deg) translateZ(250px); }
+        .face.left   { transform: rotateY(-90deg) translateZ(250px); }
+
+        /* --- DESIGN SCALES & FONTS --- */
+        h1 {
+            color: #38bdf8;
+            font-size: 2.4rem;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        h2 {
+            color: #f1f5f9;
+            font-size: 1.45rem;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        h3 {
+            color: #38bdf8;
+            font-size: 1.1rem;
+            margin-top: 12px;
+            margin-bottom: 4px;
+        }
+
+        p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #cbd5e1;
+            margin-bottom: 14px;
+            text-align: justify;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-bottom: 14px;
+            color: #cbd5e1;
+            font-size: 0.92rem;
+        }
+
+        li {
+            margin-bottom: 6px;
+            line-height: 1.5;
+        }
+
+        .sub-text {
+            font-size: 0.88rem;
+            color: #94a3b8;
+            font-style: italic;
+            margin-top: -2px;
+            margin-bottom: 10px;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .skills-section h4 {
+            color: #f8fafc;
+            margin-bottom: 10px;
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill-tag {
+            background: #334155;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            border-left: 3px solid #38bdf8;
+            color: #f8fafc;
+            font-weight: 500;
+        }
+
+        .contact-item {
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-item a {
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+
+        .declaration {
+            margin-top: 25px;
+            font-size: 0.85rem;
+            color: #64748b;
+            font-style: italic;
+            text-align: center;
+            border-top: 1px dashed #334155;
+            padding-top: 15px;
+        }
+
+        /* --- JAVASCRIPT STATE ROTATIONS --- */
+        .cube.show-front  { transform: rotateY(0deg); }
+        .cube.show-right  { transform: rotateY(-90deg); }
+        .cube.show-back   { transform: rotateY(-180deg); }
+        .cube.show-left   { transform: rotateY(90deg); }
+    </style>
+</head>
+<body>
+
+    <!-- Dynamic Portfolio Navigation Menu -->
+    <nav>
+        <ul class="menu">
+            <li><button class="menu-btn active" onclick="rotateCube('front', this)">About Me</button></li>
+            <li><button class="menu-btn" onclick="rotateCube('right', this)">Skills Matrix</button></li>
+            <li><button class="menu-btn" onclick="rotateCube('back', this)">Experience & Projects</button></li>
+            <li><button class="menu-btn" onclick="rotateCube('left', this)">Education & Contact</button></li>
+        </ul>
+    </nav>
+
+    <!-- 3D Viewport View Wrapper -->
+    <div class="scene">
+        <div class="cube show-front" id="portfolioCube">
+            
+            <!-- Face 1: Home/About & Objective -->
+            <div class="face front">
+                <h1>SK HASAN</h1>
+                <p style="color: #38bdf8; font-weight: 600; margin-bottom: 20px; font-size: 1.05rem;">
+                    Electronics & Communication Graduate | Java Software Developer
+                </p>
+                <h2>Objective</h2>
+                <p>
+                    Detail-oriented and innovative B Tech graduate in Electronics and Communication Engineering with a strong foundation in Java programming. Seeking a challenging entry-level position to apply technical skills in software development.
+                </p>
+                <p>
+                    Ready to leverage foundational knowledge in ECE alongside verified programming tracks in JAVA, SQL, and HTML. Comfortable working with Data Structures & Algorithms (DSA) and Object-Oriented Programming (OOP) paradigms to add high value to development teams.
+                </p>
+            </div>
+
+            <!-- Face 2: Core Engineering Skills Matrix -->
+            <div class="face right">
+                <h2>Technical Toolkit</h2>
+                <div class="skills-container">
+                    <div class="skills-section">
+                        <h4>Technical Competencies</h4>
+                        <div class="tags-container">
+                            <div class="skill-tag">Core Java</div>
+                            <div class="skill-tag">HTML</div>
+                            <div class="skill-tag">CSS</div>
+                            <div class="skill-tag">JavaScript</div>
+                            <div class="skill-tag">SQL</div>
+                            <div class="skill-tag">OOPs Design</div>
+                            <div class="skill-tag">DSA Foundations</div>
+                        </div>
+                    </div>
+                    
+                    <div class="skills-section">
+                        <h4>Professional Soft Skills</h4>
+                        <div class="tags-container">
+                            <div class="skill-tag">Communication Skills</div>
+                            <div class="skill-tag">Problem Solving</div>
+                            <div class="skill-tag">Logical Thinking</div>
+                            <div class="skill-tag">Time Management</div>
+                            <div class="skill-tag">Adaptability & Flexibility</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Face 3: Internship & Project Milestones -->
+            <div class="face back">
+                <h2>Professional Experience</h2>
+                <h3>Network Engineer Trainee</h3>
+                <div class="sub-text">Surya Tech Solutions Pvt Ltd | Jan 2024 – May 2024</div>
+                <ul>
+                    <li>Gained clear hands-on experience handling Optical Fiber cables, managing color-coding matrix schemes, testing protocols, and advanced splicing techniques.</li>
